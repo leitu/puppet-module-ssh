@@ -27,6 +27,7 @@ class ssh (
   $sshd_config_xauth_location       = '/usr/bin/xauth',
   $sshd_config_subsystem_sftp       = 'USE_DEFAULTS',
   $service_ensure                   = 'running',
+  $service_name                     = 'USE_DEFAULTS',
   $service_enable                   = 'true',
   $service_hasrestart               = 'true',
   $service_hasstatus                = 'true',
@@ -72,11 +73,11 @@ class ssh (
       $default_packages                   = ['openssh-server',
                                               'openssh-clients']
       $default_sshd_config_subsystem_sftp = '/usr/libexec/openssh/sftp-server'
-      $service_name                     = 'sshd'
+      $default_service_name                 = 'sshd'
     }
     'Suse': {
       $default_packages                     = 'openssh'
-      $service_name                     = 'sshd'
+      $default_service_name                 = 'sshd'
       case $::architecture {
         'x86_64': {
           $default_sshd_config_subsystem_sftp = '/usr/lib64/ssh/sftp-server'
@@ -92,9 +93,9 @@ class ssh (
     }
     'Debian': {
 	   $default_packages                  = [ 'openssh-server',
-	                                          'openssh-client']
+	                                          'openssh-client' ]
 	   $default_sshd_config_subsystem_sftp = '/usr/lib/openssh/sftp-server'
-	   $service_name                       = 'ssh'
+     $extend_service_name                = 'ssh'
     }
     default: {
       fail("ssh supports osfamilies RedHat, Suse and Debian/Ubuntu. Detected osfamily is <${::osfamily}>.")
@@ -171,9 +172,15 @@ class ssh (
     }
   }
 
+  if $service_name == "USER_DEFAULTS" {
+    $service_name_real = $default_service_name
+  }else {
+    $service_name_real = $service_name
+  }
+
   service { 'sshd_service' :
     ensure     => $service_ensure,
-    name       => $service_name,
+    name       => $service_name_real,
     enable     => $service_enable,
     hasrestart => $service_hasrestart,
     hasstatus  => $service_hasstatus,
