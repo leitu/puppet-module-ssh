@@ -8,11 +8,12 @@ The module uses exported resources to manage ssh keys and removes ssh keys that 
 
 # Compatability
 
-This module has been tested to work on the following systems with Puppet v3 and Ruby versions 1.8.7, 1.9.3 and 2.0.0.
+This module has been tested to work on the following systems with Puppet v3 and Ruby versions 1.8.7, 1.9.3, 2.0.0 and 2.1.0.
 
  * Debian 7
  * EL 5
  * EL 6
+ * EL 7
  * SLES 11
  * Ubuntu 12.04 LTS
  * Solaris 9
@@ -119,6 +120,14 @@ Boolean to enable SendEnv options for specifying environment variables. Default 
 
 - *Default*: 'USE_DEFAULTS'
 
+ssh_gssapidelegatecredentials
+-----------------------------
+*string* For GSSAPIDelegateCredentials setting in ssh_config. Valid values are
+'yes' and 'no' or to leave undef which will ensure the setting is not present
+in ssh_config.
+
+- *Default*: undef
+
 sshd_config_path
 ----------------
 Path to sshd_config.
@@ -150,6 +159,12 @@ sshd_config_mode
 sshd_config's mode. The default is '0600' on Linux and '0644' on Solaris.
 
 - *Default*: 'USE_DEFAULTS'
+
+sshd_listen_address
+-------------------
+String or Array to specify address(es) for which sshd will bind. Corresponds to ListenAddress in sshd_config.
+
+- *Default*: undef
 
 sshd_config_port
 ---------------------------
@@ -198,6 +213,12 @@ sshd_config_authkey_location
 Specify location of authorized_keys file. Default is to not specify.
 
 - *Default*: undef
+
+sshd_config_hostkey
+----------------------------
+Specify an array of server side HostKey files to use. Default is to use only /etc/ssh/ssh_host_rsa_key
+
+- *Default*: /etc/ssh/ssh_host_rsa_key
 
 sshd_config_strictmodes
 ----------------------------
@@ -344,6 +365,18 @@ Array of users for the AllowUsers setting in sshd_config.
 
 - *Default*: undef
 
+sshd_config_maxstartups
+-----------------------
+Specifies the maximum number of concurrent unauthenticated connections to the SSH daemon. 
+
+- *Default*: undef
+
+sshd_config_maxsessions
+-----------------------
+Specifies the maximum number of open sessions permitted per network connection.
+
+- *Default*: undef
+
 keys
 ----
 Hash of keys for user's ~/.ssh/authorized_keys
@@ -469,6 +502,30 @@ ssh_key_type
 Encryption type for SSH key. Valid values are 'rsa', 'dsa', 'ssh-dss' and 'ssh-rsa'
 
 - *Default*: 'ssh-rsa'
+
+ssh_config_global_known_hosts_file
+----------------------------------
+File of the global known_hosts file
+
+- *Default*: '/etc/ssh/ssh_known_hosts'
+
+ssh_config_global_known_hosts_owner
+----------------------------------
+Owner of the global known_hosts file
+
+- *Default*: 'root'
+
+ssh_config_global_known_hosts_group
+----------------------------------
+Group of the global known_hosts file
+
+- *Default*: 'root'
+
+ssh_config_global_known_hosts_mode
+----------------------------------
+File mode of the global known_hosts file
+
+- *Default*: '0644'
 
 manage_root_ssh_config
 ----------------------
